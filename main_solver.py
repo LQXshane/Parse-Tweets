@@ -14,7 +14,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('UTF8')
 
-def main(destdir, file_in, output):
+def main(destdir, file_in, output, jsdir):
     cusers = {}
     with open(file_in, 'r') as uniqueUsers:
         reader = csv.reader(uniqueUsers)
@@ -30,13 +30,17 @@ def main(destdir, file_in, output):
 
 
     file_out = os.path.join(destdir,output)
+    print datetime.now()
     with open(file_out, 'w') as twts:
         # read all json files in dir
         writer = csv.writer(twts, delimiter=',')
-        files = [ f for f in os.listdir(destdir) if os.path.isfile(os.path.join(destdir,f))]
+        files = [ f for f in os.listdir(jsdir) if os.path.isfile(os.path.join(jsdir,f))]
+        i = 0; print "# of json files in total, ", len(files)
         for f in files:
+            i += 1
+            if i % 1000 == 0: print i
             if f.endswith(".json"):
-                with open(f) as js:
+                with open(os.path.join(jsdir,f)) as js:
                     data = json.load(js)
                 js.close()
                 for i in range(len(data)):
@@ -53,10 +57,12 @@ def main(destdir, file_in, output):
                             line.extend([data[i]["id"], dt, username, cusers[username], data[i]["text"]])
                             writer.writerow(line) # write to file
     twts.close()
+    print datetime.now()
 
 if __name__ == '__main__':
     destdir = sys.argv[1]
     file_in = os.path.join(destdir, sys.argv[2])
     output = "user_tweets" + sys.argv[3] + ".csv"
+    jsdir = sys.argv[4]
 
-    main(destdir, file_in, output)
+    main(destdir, file_in, output, jsdir)
