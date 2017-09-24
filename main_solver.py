@@ -56,13 +56,13 @@ def main(destdir, file_in, output, jsdir):
                             if len(cusers[username]) >= 4:
                                 k = 4
                                 while k > 0:
-                                    line = []
-                                    line.extend([data[i]["id"], dt, username, cusers[username].pop()])
+                                    line = cusers[username].pop()
                                     writer.writerow(line) # write to file
                                     k -= 1
                                 del cusers[username]
                                 continue
-                            cusers[username].append(data[i]["text"])
+                            if dt != cusers[username][-1][1]:
+                                cusers[username].append([data[i]["id"], dt, username,data[i]["text"]])
                             if twts.tell() >= 100000000: print twts.tell(), i
         # print cusers
 
