@@ -9,18 +9,19 @@ from datetime import datetime
 import csv
 import os
 import pytz
+import collections
 
 import sys
 reload(sys)
 sys.setdefaultencoding('UTF8')
 
 def main(destdir, file_in, output, jsdir):
-    cusers = {}
+    cusers = collections.defaultdict(list)
     with open(file_in, 'r') as uniqueUsers:
         reader = csv.reader(uniqueUsers)
         for line in reader:
             if len(line) == 2 and line[0]:
-                cusers[line[1]] = 0
+                cusers[line[1]] = []
     uniqueUsers.close()
 
     print "Total # of twitter users: ", len(cusers)
@@ -51,11 +52,17 @@ def main(destdir, file_in, output, jsdir):
                         # from uniqueUsers users
                         username = data[i]['user']['screen_name']
                         if username in cusers:
-                            if cusers[username] >= 4: continue
-                            cusers[username] += 1
-                            # print twts.tell()
-                            line.extend([data[i]["id"], dt, username, cusers[username], data[i]["text"]])
-                            writer.writerow(line) # write to file
+                            if len(cusers[username]) >= 4:
+                                k = 4
+                                while k > 0:
+                                    line.extend([data[i]["id"], dt, username, cusers[username].pop()])
+                                    writer.writerow(line) # write to file
+                                    k -= 1
+                                del cusers[username]
+                            cusers[username].append(data[i]["text"])
+                            if twts.tell() >= 100000000: print twts.tell(), i
+        # print cusers
+
     twts.close()
     print datetime.now()
 
