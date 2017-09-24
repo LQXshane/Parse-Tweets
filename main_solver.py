@@ -37,10 +37,9 @@ def main(destdir, file_in, output, jsdir):
         writer = csv.writer(twts, delimiter=',')
         files = [ f for f in os.listdir(jsdir) if os.path.isfile(os.path.join(jsdir,f))]
         j = 0; print "# of json files in total, ", len(files)
-        for f in files[:40]:
+        for f in files[:100000]:
             j += 1
-            # if i % 10 == 0:
-            print j, f
+            if j % 1000 == 0: print j
             if f.endswith(".json"):
                 with open(os.path.join(jsdir,f)) as js:
                     data = json.load(js)
