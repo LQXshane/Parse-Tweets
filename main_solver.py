@@ -48,7 +48,7 @@ def main(destdir, file_in, output, jsdir):
                     # within valid time frame
                     try:
                         dt = parser.parse(data[i]['created_at'])
-                    except: pass
+                    except: continue
                     if 'created_at' in data[i] and start <= dt <= end:
                         # from uniqueUsers users
                         username = data[i]['user']['screen_name']
@@ -61,6 +61,7 @@ def main(destdir, file_in, output, jsdir):
                                     writer.writerow(line) # write to file
                                     k -= 1
                                 del cusers[username]
+                                continue
                             cusers[username].append(data[i]["text"])
                             if twts.tell() >= 100000000: print twts.tell(), i
         # print cusers
