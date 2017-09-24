@@ -39,7 +39,8 @@ def main(destdir, file_in, output, jsdir):
         i = 0; print "# of json files in total, ", len(files)
         for f in files[:40]:
             i += 1
-            if i % 10 == 0: print i, f
+            # if i % 10 == 0: 
+            print i, f
             if f.endswith(".json"):
                 with open(os.path.join(jsdir,f)) as js:
                     data = json.load(js)
