@@ -46,9 +46,11 @@ def main(destdir, file_in, output, jsdir):
                 js.close()
                 for i in range(len(data)):
                     # within valid time frame
+                    try:
+                        dt = parser.parse(data[i]['created_at'])
+                    except: pass
                     if 'created_at' in data[i] and start <= dt <= end:
                         # from uniqueUsers users
-                        dt = parser.parse(data[i]['created_at'])
                         username = data[i]['user']['screen_name']
                         if username in cusers:
                             if len(cusers[username]) >= 4:
