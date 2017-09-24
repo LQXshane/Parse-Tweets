@@ -46,15 +46,15 @@ def main(destdir, file_in, output, jsdir):
                 js.close()
                 for i in range(len(data)):
                     # within valid time frame
-                    dt = parser.parse(data[i]['created_at'])
-                    line = []
                     if 'created_at' in data[i] and start <= dt <= end:
                         # from uniqueUsers users
+                        dt = parser.parse(data[i]['created_at'])
                         username = data[i]['user']['screen_name']
                         if username in cusers:
                             if len(cusers[username]) >= 4:
                                 k = 4
                                 while k > 0:
+                                    line = []
                                     line.extend([data[i]["id"], dt, username, cusers[username].pop()])
                                     writer.writerow(line) # write to file
                                     k -= 1
