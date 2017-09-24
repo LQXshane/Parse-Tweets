@@ -61,7 +61,9 @@ def main(destdir, file_in, output, jsdir):
                                     k -= 1
                                 del cusers[username]
                                 continue
-                            if dt != cusers[username][-1][1]:
+                            if cusers[username] and dt == cusers[username][-1][1]:
+                                pass
+                            else:
                                 cusers[username].append([data[i]["id"], dt, username,data[i]["text"]])
                             if twts.tell() >= 100000000: print twts.tell(), i
         # print cusers
