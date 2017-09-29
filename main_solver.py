@@ -39,7 +39,7 @@ def main(destdir, file_in, output, jsdir):
         j = 0; print "# of json files in total, ", len(files)
         for f in files:
             j += 1
-            if j % 1000 == 0: print j
+            if j % 10000 == 0: print j
             if f.endswith(".json"):
                 with open(os.path.join(jsdir,f)) as js:
                     data = json.load(js)
@@ -53,8 +53,8 @@ def main(destdir, file_in, output, jsdir):
                         # from uniqueUsers users
                         username = data[i]['user']['screen_name']
                         if username in cusers:
-                            if len(cusers[username]) >= 4:
-                                k = 4
+                            if len(cusers[username]) >= 3:
+                                k = 3
                                 while k > 0:
                                     line = cusers[username].pop()
                                     writer.writerow(line) # write to file
