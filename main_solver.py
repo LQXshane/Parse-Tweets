@@ -36,7 +36,7 @@ def main(destdir, file_in, output, jsdir):
         # read all json files in dir
         writer = csv.writer(twts, delimiter=',')
         files = [ f for f in os.listdir(jsdir) if os.path.isfile(os.path.join(jsdir,f))]
-        j = 0; print "# of json files in total, ", len(files)
+        j = 0; print "%d of json files in total, "%(len(files))
         for f in files:
             j += 1
             if j % 10000 == 0: print j
