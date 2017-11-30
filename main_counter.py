@@ -5,7 +5,6 @@ import csv
 import os
 import pytz
 import collections
-
 import sys
 reload(sys)
 sys.setdefaultencoding('UTF8')
@@ -46,3 +45,10 @@ if __name__ == '__main__':
     print "From ",MINDATE.date(), "to ", MAXDATE.date()
     print "Total %d tweets"%(COUNT)
     print "%d tweets does not have datetime"%(INVALIDS)
+
+    with open("counter.log", 'w') as f:
+        writer = csv.writer(f, delimiter=" ")
+        writer.writerow("From " + str(MINDATE.date()) + "to " + str(MAXDATE.date()))
+        writer.writerow("Total %d tweets"%(COUNT))
+        writer.writerow("%d tweets does not have datetime"%(INVALIDS))
+    f.close()
