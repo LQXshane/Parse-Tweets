@@ -57,6 +57,7 @@ def main(jsdir, file_out, cout, tout):
         # print "%d of json files in total, "%(len(files))
         TOTAL = 0
         for f in files:
+            data = {}
             j += 1
             # if j % 10000 == 0: print j
             if f.endswith(".json"):
