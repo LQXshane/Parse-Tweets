@@ -63,7 +63,7 @@ def main(jsdir, file_out, cout, tout):
                 with open(os.path.join(jsdir,f)) as js:
                     data = json.load(js)
                 js.close()
-            TOTAL += len(data)
+
             for i in range(len(data)):
                 # within valid time frame
                 try:
@@ -84,6 +84,7 @@ def main(jsdir, file_out, cout, tout):
                         helper(clinton_exist, clinton_users, data, i, 1, "Clinton")
                     else:
                         NULL += 1
+            TOTAL += len(data)
     TWEETS.close()
     # unique clinton and trump users
     with open(cout, 'w') as out:
