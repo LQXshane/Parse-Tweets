@@ -40,10 +40,12 @@ def main(jsdir, file_out, cout, tout):
     trump_users = collections.defaultdict(list)
     utc = pytz.utc
     START, END =  datetime(2016,07,18,tzinfo=utc), datetime(2016,11,07,tzinfo=utc)
+    MAXDATE = datetime(2010,01,01,tzinfo=utc)
+    MINDATE = datetime(2017,12,30,tzinfo=utc)
     clinton_exist = set() # set of users who already exist in the final result
     trump_exist = set()
 
-    print datetime.now()
+    # print datetime.now()
 
     with open(file_out, 'w') as TWEETS:
         writer = csv.writer(TWEETS, delimiter=',')
@@ -51,28 +53,35 @@ def main(jsdir, file_out, cout, tout):
         files = [ f for f in os.listdir(jsdir) if os.path.isfile(os.path.join(jsdir,f))]
 
         CCOUNT = TCOUNT = NULL = 0 # number of tweets mentioning clinton and trump respectively
-        j = 0; print "%d of json files in total, "%(len(files))
+        j = 0
+        # print "%d of json files in total, "%(len(files))
+        TOTAL = 0
         for f in files:
             j += 1
-            if j % 10000 == 0: print j
+            # if j % 10000 == 0: print j
             if f.endswith(".json"):
                 with open(os.path.join(jsdir,f)) as js:
                     data = json.load(js)
                 js.close()
+            TOTAL += len(data)
             for i in range(len(data)):
                 # within valid time frame
                 try:
                     dt = parser.parse(data[i]['created_at'])
+                    if dt > MAXDATE:
+                        MAXDATE = dt
+                    if dt < MINDATE:
+                        MINDATE = dt
                 except: continue
                 if 'created_at' in data[i] and START <= dt <= END:
                     username = data[i]['user']['screen_name']
                     tweet = data[i]["text"].lower()
                     if "trump" in tweet:
                         TCOUNT += 1
-                        helper(trump_exist, trump_users, data, i,  3, "Trump")
+                        helper(trump_exist, trump_users, data, i,  1, "Trump")
                     elif "hillary" in tweet or "clinton" in tweet:
                         CCOUNT += 1
-                        helper(clinton_exist, clinton_users, data, i, 3, "Clinton")
+                        helper(clinton_exist, clinton_users, data, i, 1, "Clinton")
                     else:
                         NULL += 1
     TWEETS.close()
@@ -81,15 +90,23 @@ def main(jsdir, file_out, cout, tout):
         writer = csv.writer(out)
         writer.writerows([x] for x in clinton_exist)
 
+
     with open(tout, 'w') as out:
         writer = csv.writer(out)
         writer.writerows([x] for x in trump_exist)
+        writer.writerow(["Json files, ", len(files)])
+        writer.writerow(["Tweets, ", TOTAL])
+        writer.writerow(["Trump, ", TCOUNT])
+        writer.writerow(["Clinton, ", CCOUNT])
+        writer.writerow(["Neither, ", NULL])
+        writer.writerow([MAXDATE])
+        writer.writerow([MINDATE])
 
 
-    print datetime.now()
-    print "%d mentioning Trump in total"%(TCOUNT)
-    print "%d mentioning Clinton in total"%(CCOUNT)
-    print "%d mentioning neither candidates"%(NULL)
+    # print datetime.now()
+    # print "%d mentioning Trump in total"%(TCOUNT)
+    # print "%d mentioning Clinton in total"%(CCOUNT)
+    # print "%d mentioning neither candidates"%(NULL)
 
 
 if __name__ == '__main__':
