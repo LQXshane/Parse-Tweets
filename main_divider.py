@@ -79,10 +79,10 @@ def main(jsdir, file_out, cout, tout):
                     tweet = data[i]["text"].lower()
                     if "trump" in tweet:
                         TCOUNT += 1
-                        helper(trump_exist, trump_users, data, i,  1, "Trump")
+                        helper(trump_exist, trump_users, data, i,  3, "Trump")
                     elif "hillary" in tweet or "clinton" in tweet:
                         CCOUNT += 1
-                        helper(clinton_exist, clinton_users, data, i, 1, "Clinton")
+                        helper(clinton_exist, clinton_users, data, i, 3, "Clinton")
                     else:
                         NULL += 1
             TOTAL += len(data)
